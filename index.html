@@ -1,652 +1,848 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>True Scikit-Learn Mind Map</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
-  <style>
-    :root {
-      --bg-dark: #1a1d24;
-      --card-dark: #212529;
-      --border-dark: #343a40;
-      --primary: #20c997; /* Teal */
-      --secondary: #ff6b6b; /* Coral */
-      --accent: #4dabf7; /* Blue */
-      --text-dark: #e9ecef;
-    }
+    <meta charset="UTF-8">
+    <title>True Scikit-Learn Mind Map</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+    <style>
+        :root {
+            --bg-dark: #1a1d24;
+            --card-dark: #212529;
+            --border-dark: #343a40;
+            --primary: #20c997;
+            --secondary: #ff6b6b;
+            --accent: #4dabf7;
+            --text-dark: #e9ecef;
+        }
 
-    body {
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background: var(--bg-dark);
-      overflow: hidden;
-    }
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background: var(--bg-dark);
+            overflow: hidden;
+        }
 
-    #tsparticles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-    }
+        #tsparticles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
 
-    #mindmap {
-      width: 100vw;
-      height: 100vh;
-      cursor: grab;
-    }
-    #mindmap:active {
-      cursor: grabbing;
-    }
+        #mindmap {
+            width: 100vw;
+            height: 100vh;
+            cursor: grab;
+        }
 
-    .node {
-      cursor: pointer;
-      transition: filter 0.3s ease;
-    }
-    .node:hover {
-      filter: drop-shadow(0px 4px 12px rgba(0,0,0,0.5));
-    }
-    .node rect, .node circle {
-      stroke-width: 3px;
-      transition: all 0.3s ease;
-    }
+        #mindmap:active {
+            cursor: grabbing;
+        }
 
-    .node-root circle {
-      fill: var(--primary);
-      stroke: #1aa07a;
-    }
-    .node-root text {
-      font-family: 'Poppins', sans-serif;
-      fill: var(--bg-dark);
-      font-weight: 700;
-      font-size: 20px;
-    }
+        .node {
+            cursor: pointer;
+            transition: filter 0.3s ease;
+        }
 
-    .node-category rect {
-      fill: var(--accent);
-      stroke: #2c7be5;
-    }
-    .node-category text,
-    .node-sub-category text,
-    .node-class text {
-      font-family: 'Poppins', sans-serif;
-      fill: white;
-      font-weight: 600;
-    }
+        .node:hover {
+            filter: drop-shadow(0px 4px 12px rgba(0,0,0,0.5));
+        }
 
-    .node-sub-category rect {
-      fill: #3b5998; /* A darker, complementary blue */
-      stroke: #2d4373;
-    }
-    
-    .node-class circle {
-      fill: var(--secondary);
-      stroke: #e55a5a;
-    }
+        .node rect, .node circle {
+            stroke-width: 3px;
+            transition: all 0.3s ease;
+        }
 
-    .node-param rect {
-      fill: var(--card-dark);
-      stroke: var(--primary);
-    }
-    .node-param text {
-      fill: var(--text-dark);
-      font-size: 13px;
-    }
-    .node-param tspan {
-      font-family: "Courier New", Courier, monospace;
-      font-weight: bold;
-      fill: var(--primary);
-    }
+        .node-root circle {
+            fill: #4DB6AC;
+            stroke: #26a69a;
+        }
 
-    .node text {
-      font-size: 14px;
-      text-anchor: middle;
-      dominant-baseline: central;
-    }
+        .node-root text {
+            font-family: 'Poppins', sans-serif;
+            fill: var(--bg-dark);
+            font-weight: 700;
+            font-size: 20px;
+        }
 
-    .link {
-      fill: none;
-      stroke: var(--border-dark);
-      stroke-width: 2.5px;
-    }
+        .node-category rect {
+            fill: #9575CD;
+            stroke: #7e57c2;
+        }
 
-    /* Portfolio Button Style */
-    #portfolio-btn {
-        position: fixed;
-        top: 20px; /* Changed from 'bottom' to 'top' */
-        right: 20px;
-        z-index: 100;
-        /* ... other styles ... */
-        background-color: var(--primary);
-        color: white;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 600;
-        padding: 12px 20px; /* Adjusted padding */
-        border-radius: 9999px;
-        text-decoration: none;
-        box-shadow: 0 4px 14px 0 rgba(32, 201, 151, 0.39);
-        transition: all 0.3s ease;
-        white-space: nowrap; /* Prevents text wrapping */
-    }
-    #portfolio-btn:hover {
-        background-color: #1aa07a;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px 0 rgba(32, 201, 151, 0.45);
-    }
-  </style>
+        .node-category text, .node-sub-category text, .node-class text {
+            font-family: 'Poppins', sans-serif;
+            fill: white;
+            font-weight: 600;
+        }
+
+        .node-sub-category rect {
+            fill: #648dae;
+            stroke: #547899;
+        }
+
+        .node-class circle {
+            fill: #F08080;
+            stroke: #E57373;
+        }
+
+        .node-param rect {
+            stroke: #4DB6AC;
+        }
+
+        .node-param text {
+            fill: var(--text-dark);
+            font-size: 13px;
+        }
+
+        .node-param tspan {
+            font-family: "Courier New", Courier, monospace;
+            font-weight: bold;
+            fill: #4DB6AC;
+        }
+
+        .node text {
+            font-size: 14px;
+            text-anchor: middle;
+            dominant-baseline: central;
+        }
+
+        .link {
+            fill: none;
+            stroke: var(--border-dark);
+            stroke-width: 2.5px;
+        }
+
+        #portfolio-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background-color: var(--primary);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 9999px;
+            text-decoration: none;
+            box-shadow: 0 4px 14px 0 rgba(32, 201, 151, 0.39);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        #portfolio-btn:hover {
+            background-color: #1aa07a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(32, 201, 151, 0.45);
+        }
+    </style>
 </head>
 <body>
-  <div id="tsparticles"></div>
-  <svg id="mindmap"></svg>
+    <div id="tsparticles"></div>
+    <svg id="mindmap"></svg>
+    <a href="https://manojdox.github.io/Portfolio2/" id="portfolio-btn" target="_blank" rel="noopener noreferrer">
+        Explore My Portfolio ✨
+    </a>
 
-  <a href="https://manojdox.github.io/Portfolio2/" id="portfolio-btn" target="_blank" rel="noopener noreferrer">
-  Explore My Portfolio ✨
-</a>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        const data = {
+            name: "scikit-learn",
+            type: "root",
+            children: [
+                {
+                    name: "Supervised Learning",
+                    type: "category",
+                    children: [
+                        {
+                            name: "Regression",
+                            type: "sub-category",
+                            children: [
+                                {
+                                    name: "Linear Regression",
+                                    type: "class",
+                                    children: [
+                                        {
+                                            name: [
+                                                "• Predicts a target by fitting the best linear relationship.",
+                                                "• Minimizes the sum of squared differences (errors).",
+                                                "• Simple, interpretable, and serves as a strong baseline."
+                                            ],
+                                            type: "param"
+                                        },
+                                        {
+                                            name: "Formula: y = β₀ + β₁x + ε",
+                                            type: "param"
+                                        },
+                                        {
+                                            name: [
+                                                "from sklearn.linear_model import LinearRegression",
+                                                "model = LinearRegression()",
+                                                "model.fit(X_train, y_train)",
+                                                "y_pred = model.predict(X_test)"
+                                            ],
+                                            type: "param"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "Evaluation Metrics",
+                                    type: "class",
+                                    children: [
+                                        {
+                                            name: "MSE",
+                                            type: "class",
+                                            children: [
+                                                {
+                                                    name: ["Mean Squared Error", "Sensitive to large errors"],
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Formula: (1/n) * Σ(yᵢ - ŷᵢ)²",
+                                                    type: "param"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "RMSE",
+                                            type: "class",
+                                            children: [
+                                                {
+                                                    name: ["Root Mean Squared Error", "In original units of target"],
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Formula: √MSE",
+                                                    type: "param"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "MAE",
+                                            type: "class",
+                                            children: [
+                                                {
+                                                    name: ["Mean Absolute Error", "Less sensitive to outliers"],
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Formula: (1/n) * Σ|yᵢ - ŷᵢ|",
+                                                    type: "param"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "R-Squared",
+                                            type: "class",
+                                            children: [
+                                                {
+                                                    name: ["Coefficient of Determination", "Proportion of variance explained"],
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Formula: 1 - (RSS / TSS)",
+                                                    type: "param"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "Gradient Descent",
+                                    type: "class",
+                                    children: [
+                                        {
+                                            name: [
+                                                "• An optimization algorithm to find the minimum of a cost function.",
+                                                "• Iteratively moves in the direction opposite to the gradient.",
+                                                "• Step size is controlled by the 'learning rate' hyperparameter."
+                                            ],
+                                            type: "param"
+                                        },
+                                        {
+                                            name: "Update Rule: θ := θ - α * ∇J(θ)",
+                                            type: "param"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "Bias-Variance Tradeoff",
+                                    type: "class",
+                                    children: [
+                                        {
+                                            name: [
+                                                "• The core challenge of building a generalizable model.",
+                                                "• High Bias (Underfitting): Model is too simple.",
+                                                "• High Variance (Overfitting): Model is too complex.",
+                                                "• Goal: Balance both to minimize total error on new data."
+                                            ],
+                                            type: "param"
+                                        },
+                                        {
+                                            name: "Total Error = Bias² + Variance + Noise",
+                                            type: "param"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "Regularization",
+                                    type: "class",
+                                    children: [
+                                        {
+                                            name: [
+                                                "• A technique to prevent overfitting by penalizing complexity.",
+                                                "• Adds a penalty for large coefficient values to the cost function.",
+                                                "• L1 (Lasso) can perform feature selection.",
+                                                "• L2 (Ridge) shrinks coefficients but rarely to zero."
+                                            ],
+                                            type: "param"
+                                        },
+                                        {
+                                            name: "L1 Cost: RSS + α * Σ|βⱼ|",
+                                            type: "param"
+                                        },
+                                        {
+                                            name: "L2 Cost: RSS + α * Σ(βⱼ)²",
+                                            type: "param"
+                                        },
+                                        {
+                                            name: [
+                                                "from sklearn.linear_model import Lasso, Ridge",
+                                                "lasso = Lasso(alpha=1.0)",
+                                                "ridge = Ridge(alpha=1.0)"
+                                            ],
+                                            type: "param"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "Classification",
+                            type: "sub-category",
+                            children: [
+                                {
+                                    name: "Logistic Regression",
+                                    type: "class",
+                                    children: [
+                                        {
+                                            name: "Predicts the probability of a binary outcome (Yes/No, 1/0).",
+                                            type: "param"
+                                        },
+                                        {
+                                            name: "Sigmoid Function: P(Y=1) = 1 / (1 + e⁻ᶻ)",
+                                            type: "param"
+                                        },
+                                        {
+                                            name: [
+                                                "from sklearn.linear_model import LogisticRegression",
+                                                "model = LogisticRegression()",
+                                                "model.fit(X_train, y_train)"
+                                            ],
+                                            type: "param"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "Decision Tree",
+                                    type: "class",
+                                    children: [
+                                        {
+                                            name: "What is it?",
+                                            type: "class",
+                                            children: [{
+                                                name: "A flowchart-like structure for making decisions based on data features.",
+                                                type: "param"
+                                            }]
+                                        },
+                                        {
+                                            name: "Splitting Criteria",
+                                            type: "class",
+                                            children: [
+                                                {
+                                                    name: "Information Gain",
+                                                    type: "class",
+                                                    children: [
+                                                        {
+                                                            name: "Measures reduction in entropy. Higher is better.",
+                                                            type: "param"
+                                                        },
+                                                        {
+                                                            name: "Entropy Formula: -Σ p(i) * log₂(p(i))",
+                                                            type: "param"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    name: "Gini Impurity",
+                                                    type: "class",
+                                                    children: [
+                                                        {
+                                                            name: "Measures probability of incorrect classification. Lower is better.",
+                                                            type: "param"
+                                                        },
+                                                        {
+                                                            name: "Formula: 1 - Σ p(i)²",
+                                                            type: "param"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "Implementation",
+                                            type: "class",
+                                            children: [
+                                                {
+                                                    name: [
+                                                        "from sklearn.tree import DecisionTreeClassifier",
+                                                        "model = DecisionTreeClassifier()",
+                                                        "model.fit(X_train, y_train)"
+                                                    ],
+                                                    type: "param"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "Pros & Cons",
+                                            type: "class",
+                                            children: [
+                                                {
+                                                    name: ["✓ Easy to interpret", "✓ Handles various data types", "✓ Little data prep needed"],
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: ["✗ Prone to overfitting", "✗ Can be unstable", "✗ Biased with imbalanced data"],
+                                                    type: "param"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "Classification Metrics",
+                                    type: "class",
+                                    children: [
+                                        {
+                                            name: "Accuracy",
+                                            type: "class",
+                                            children: [
+                                                {
+                                                    name: "How many predictions were correct overall?",
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Formula: (TP+TN)/(TP+TN+FP+FN)",
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Code: from sklearn.metrics import accuracy_score",
+                                                    type: "param"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "Precision",
+                                            type: "class",
+                                            children: [
+                                                {
+                                                    name: "Of all positive predictions, how many were truly positive?",
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Formula: TP / (TP+FP)",
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Code: from sklearn.metrics import precision_score",
+                                                    type: "param"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "Recall",
+                                            type: "class",
+                                            children: [
+                                                {
+                                                    name: "Of all actual positives, how many did we find?",
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Formula: TP / (TP+FN)",
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Code: from sklearn.metrics import recall_score",
+                                                    type: "param"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "F1-Score",
+                                            type: "class",
+                                            children: [
+                                                {
+                                                    name: "The harmonic mean of Precision and Recall.",
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Formula: 2 * (Prec * Rec) / (Prec + Rec)",
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Code: from sklearn.metrics import f1_score",
+                                                    type: "param"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "Log Loss",
+                                            type: "class",
+                                            children: [
+                                                {
+                                                    name: "Penalizes confident but incorrect probability predictions.",
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Formula: - (y log(p) + (1-y)log(1-p))",
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Code: from sklearn.metrics import log_loss",
+                                                    type: "param"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "AUC-ROC",
+                                            type: "class",
+                                            children: [
+                                                {
+                                                    name: "Model's ability to distinguish between classes.",
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Area under the TPR vs FPR curve.",
+                                                    type: "param"
+                                                },
+                                                {
+                                                    name: "Code: from sklearn.metrics import roc_auc_score",
+                                                    type: "param"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "Unsupervised Learning",
+                    type: "category",
+                    children: [
+                        {
+                            name: "Clustering",
+                            type: "sub-category",
+                            children: [
+                                {
+                                    name: "KMeans",
+                                    type: "class"
+                                },
+                                {
+                                    name: "DBSCAN",
+                                    type: "class"
+                                }
+                            ]
+                        },
+                        {
+                            name: "Decomposition",
+                            type: "sub-category",
+                            children: [
+                                {
+                                    name: "PCA",
+                                    type: "class"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "Model Selection",
+                    type: "category",
+                    children: [
+                        {
+                            name: "Splitting",
+                            type: "sub-category",
+                            children: [
+                                {
+                                    name: "train_test_split",
+                                    type: "class"
+                                }
+                            ]
+                        },
+                        {
+                            name: "Tuning",
+                            type: "sub-category",
+                            children: [
+                                {
+                                    name: "GridSearchCV",
+                                    type: "class"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "Preprocessing",
+                    type: "category",
+                    children: [
+                        {
+                            name: "StandardScaler",
+                            type: "class"
+                        },
+                        {
+                            name: "MinMaxScaler",
+                            type: "class"
+                        }
+                    ]
+                }
+            ]
+        };
 
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script>
-    const data = {
-      name: "scikit-learn", type: "root",
-      children: [
-        {
-          name: "Supervised Learning", type: "category",
-          children: [
-            {
-              name: "Regression", type: "sub-category",
-              children: [
-                {
-                  name: "Linear Regression", type: "class",
-                  children: [
-                    { 
-                      name: [
-                        "• Predicts a target by fitting the best linear relationship.",
-                        "• Minimizes the sum of squared differences (errors).",
-                        "• Simple, interpretable, and serves as a strong baseline."
-                      ],
-                      type: "param"
-                    },
-                    { name: "Formula: y = β₀ + β₁x + ε", type: "param" },
-                    { 
-                      name: [
-                        "from sklearn.linear_model import LinearRegression",
-                        "model = LinearRegression()",
-                        "model.fit(X_train, y_train)",
-                        "y_pred = model.predict(X_test)"
-                      ],
-                      type: "param" 
-                    }
-                  ]
-                },
-                {
-                  name: "Evaluation Metrics", type: "class",
-                  children: [
-                    { 
-                      name: "MSE", type: "class",
-                      children: [
-                        { name: ["Mean Squared Error", "Sensitive to large errors"], type: "param" },
-                        { name: "Formula: (1/n) * Σ(yᵢ - ŷᵢ)²", type: "param" }
-                      ]
-                    },
-                    { 
-                      name: "RMSE", type: "class",
-                      children: [
-                        { name: ["Root Mean Squared Error", "In original units of target"], type: "param" },
-                        { name: "Formula: √MSE", type: "param" }
-                      ]
-                    },
-                    { 
-                      name: "MAE", type: "class",
-                      children: [
-                        { name: ["Mean Absolute Error", "Less sensitive to outliers"], type: "param" },
-                        { name: "Formula: (1/n) * Σ|yᵢ - ŷᵢ|", type: "param" }
-                      ]
-                    },
-                    { 
-                      name: "R-Squared", type: "class",
-                      children: [
-                        { name: ["Coefficient of Determination", "Proportion of variance explained"], type: "param" },
-                        { name: "Formula: 1 - (RSS / TSS)", type: "param" }
-                      ]
-                    }
-                  ]
-                },
-                 {
-                  name: "Gradient Descent", type: "class",
-                   children: [
-                    { 
-                      name: [
-                        "• An optimization algorithm to find the minimum of a cost function.",
-                        "• Iteratively moves in the direction opposite to the gradient.",
-                        "• Step size is controlled by the 'learning rate' hyperparameter."
-                      ],
-                      type: "param"
-                    },
-                    { name: "Update Rule: θ := θ - α * ∇J(θ)", type: "param" }
-                  ]
-                },
-                {
-                  name: "Bias-Variance Tradeoff", type: "class",
-                  children: [
-                     { 
-                      name: [
-                        "• The core challenge of building a generalizable model.",
-                        "• High Bias (Underfitting): Model is too simple.",
-                        "• High Variance (Overfitting): Model is too complex.",
-                        "• Goal: Balance both to minimize total error on new data."
-                      ],
-                      type: "param"
-                    },
-                    { name: "Total Error = Bias² + Variance + Noise", type: "param" }
-                  ]
-                },
-                {
-                  name: "Regularization", type: "class",
-                  children: [
-                    { 
-                      name: [
-                        "• A technique to prevent overfitting by penalizing complexity.",
-                        "• Adds a penalty for large coefficient values to the cost function.",
-                        "• L1 (Lasso) can perform feature selection.",
-                        "• L2 (Ridge) shrinks coefficients but rarely to zero."
-                      ],
-                      type: "param"
-                    },
-                    { name: "L1 Cost: RSS + α * Σ|βⱼ|", type: "param" },
-                    { name: "L2 Cost: RSS + α * Σ(βⱼ)²", type: "param" },
-                    { 
-                      name: [
-                        "from sklearn.linear_model import Lasso, Ridge",
-                        "lasso = Lasso(alpha=1.0)",
-                        "ridge = Ridge(alpha=1.0)"
-                      ], 
-                      type: "param" 
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              name: "Classification", type: "sub-category",
-              children: [
-                {
-                  name: "Logistic Regression", type: "class",
-                  children: [
-                    { name: "Predicts the probability of a binary outcome (Yes/No, 1/0).", type: "param" },
-                    { name: "Sigmoid Function: P(Y=1) = 1 / (1 + e⁻ᶻ)", type: "param" },
-                    { 
-                      name: [
-                        "from sklearn.linear_model import LogisticRegression",
-                        "model = LogisticRegression()",
-                        "model.fit(X_train, y_train)"
-                      ],
-                      type: "param" 
-                    }
-                  ]
-                },
-                {
-                  name: "Decision Tree", type: "class",
-                  children: [
-                    { 
-                        name: "What is it?", type: "class",
-                        children: [{ name: "A flowchart-like structure for making decisions based on data features.", type: "param" }]
-                    },
-                    { 
-                        name: "Splitting Criteria", type: "class",
-                        children: [
-                            { 
-                                name: "Information Gain", type: "class",
-                                children: [
-                                    { name: "Measures reduction in entropy. Higher is better.", type: "param"},
-                                    { name: "Entropy Formula: -Σ p(i) * log₂(p(i))", type: "param" }
-                                ]
-                            },
-                            { 
-                                name: "Gini Impurity", type: "class",
-                                children: [
-                                    { name: "Measures probability of incorrect classification. Lower is better.", type: "param"},
-                                    { name: "Formula: 1 - Σ p(i)²", type: "param"}
-                                ]
-                            }
-                        ]
-                    },
-                    { 
-                        name: "Implementation", type: "class",
-                        children: [
-                            { 
-                                name: [
-                                    "from sklearn.tree import DecisionTreeClassifier",
-                                    "model = DecisionTreeClassifier()",
-                                    "model.fit(X_train, y_train)"
-                                ],
-                                type: "param"
-                            }
-                        ]
-                    },
-                    { 
-                        name: "Pros & Cons", type: "class",
-                        children: [
-                            { name: ["✓ Easy to interpret", "✓ Handles various data types", "✓ Little data prep needed"], type: "param" },
-                            { name: ["✗ Prone to overfitting", "✗ Can be unstable", "✗ Biased with imbalanced data"], type: "param" }
-                        ]
-                    }
-                  ]
-                },
-                {
-                  name: "Classification Metrics", type: "class",
-                  children: [
-                    {
-                      name: "Accuracy", type: "class",
-                      children: [
-                        { name: "How many predictions were correct overall?", type: "param" },
-                        { name: "Formula: (TP+TN)/(TP+TN+FP+FN)", type: "param" },
-                        { name: "Code: from sklearn.metrics import accuracy_score", type: "param" }
-                      ]
-                    },
-                    {
-                      name: "Precision", type: "class",
-                      children: [
-                        { name: "Of all positive predictions, how many were truly positive?", type: "param" },
-                        { name: "Formula: TP / (TP+FP)", type: "param" },
-                        { name: "Code: from sklearn.metrics import precision_score", type: "param" }
-                      ]
-                    },
-                    {
-                      name: "Recall", type: "class",
-                      children: [
-                        { name: "Of all actual positives, how many did we find?", type: "param" },
-                        { name: "Formula: TP / (TP+FN)", type: "param" },
-                        { name: "Code: from sklearn.metrics import recall_score", type: "param" }
-                      ]
-                    },
-                    {
-                      name: "F1-Score", type: "class",
-                      children: [
-                        { name: "The harmonic mean of Precision and Recall.", type: "param" },
-                        { name: "Formula: 2 * (Prec * Rec) / (Prec + Rec)", type: "param" },
-                        { name: "Code: from sklearn.metrics import f1_score", type: "param" }
-                      ]
-                    },
-                    {
-                      name: "Log Loss", type: "class",
-                      children: [
-                        { name: "Penalizes confident but incorrect probability predictions.", type: "param" },
-                        { name: "Formula: - (y log(p) + (1-y)log(1-p))", type: "param" },
-                        { name: "Code: from sklearn.metrics import log_loss", type: "param" }
-                      ]
-                    },
-                    {
-                      name: "AUC-ROC", type: "class",
-                      children: [
-                        { name: "Model's ability to distinguish between classes.", type: "param" },
-                        { name: "Area under the TPR vs FPR curve.", type: "param" },
-                        { name: "Code: from sklearn.metrics import roc_auc_score", type: "param" }
-                      ]
-                    }
-                  ]
-                }
-              ]
+        let root;
+        const duration = 500;
+        const svg = d3.select("#mindmap");
+        const g = svg.append("g");
+
+        function draw() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            svg.attr("width", width).attr("height", height);
+
+            root = d3.hierarchy(data, d => d.children);
+            root.x0 = height / 2;
+            root.y0 = 0;
+
+            if(root.children) {
+                root.children.forEach(collapse);
             }
-          ]
-        },
-        {
-          name: "Unsupervised Learning", type: "category",
-          children: [
-            { name: "Clustering", type: "sub-category", children: [
-              { name: "KMeans", type: "class" },
-              { name: "DBSCAN", type: "class" }
-            ]},
-            { name: "Decomposition", type: "sub-category", children: [
-              { name: "PCA", type: "class" }
-            ]}
-          ]
-        },
-        {
-          name: "Model Selection", type: "category",
-          children: [
-            { name: "Splitting", type: "sub-category", children: [
-              { name: "train_test_split", type: "class" }
-            ]},
-            { name: "Tuning", type: "sub-category", children: [
-              { name: "GridSearchCV", type: "class" }
-            ]}
-          ]
-        },
-        {
-          name: "Preprocessing", type: "category",
-          children: [
-              { name: "StandardScaler", type: "class" },
-              { name: "MinMaxScaler", type: "class" }
-          ]
+
+            const initialTransform = d3.zoomIdentity.translate(150, height / 2);
+            svg.call(zoom.transform, initialTransform);
+
+            update(root);
         }
-      ]
-    };
 
-    let root;
-    const duration = 500;
-    
-    const svg = d3.select("#mindmap");
-    const g = svg.append("g");
-
-    function draw() {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      svg.attr("width", width).attr("height", height);
-      
-      root = d3.hierarchy(data, d => d.children);
-      root.x0 = height / 2;
-      root.y0 = 0;
-      
-      if(root.children) {
-        root.children.forEach(collapse);
-      }
-
-      const initialTransform = d3.zoomIdentity.translate(150, height / 2);
-      svg.call(zoom.transform, initialTransform);
-      
-      update(root);
-    }
-    
-    const zoom = d3.zoom().scaleExtent([0.1, 3]).on("zoom", (event) => {
-      g.attr("transform", event.transform);
-    });
-    svg.call(zoom);
-
-    function collapse(d) {
-      if (d.children) {
-        d._children = d.children;
-        d._children.forEach(collapse);
-        d.children = null;
-      }
-    }
-
-    function update(source) {
-      const treeLayout = d3.tree().nodeSize([150, 200]); 
-      const treeData = treeLayout(root);
-      
-      const nodes = treeData.descendants();
-      const links = treeData.descendants().slice(1);
-
-      nodes.forEach(d => {
-        d.y = d.depth * 350; 
-      });
-
-      const node = g.selectAll('g.node')
-        .data(nodes, d => d.id || (d.id = crypto.randomUUID()));
-
-      const nodeEnter = node.enter().append('g')
-        .attr('class', d => `node node-${d.data.type}`)
-        .attr('transform', `translate(${source.y0},${source.x0})`)
-        .on('click', click);
-
-      nodeEnter.each(function(d) {
-          const group = d3.select(this);
-          const isMultiLine = Array.isArray(d.data.name);
-          const text = group.append('text');
-
-          if (isMultiLine) {
-              const lineHeight = d.data.type === 'param' ? '1.3em' : '1.2em';
-              d.data.name.forEach((line, i) => {
-                  text.append('tspan')
-                      .attr('x', 0)
-                      .attr('dy', i === 0 ? 0 : lineHeight)
-                      .text(line);
-              });
-          } else {
-              text.text(d.data.name);
-          }
-          
-          const bbox = text.node().getBBox();
-          
-          if (d.data.type === 'root' || d.data.type === 'class') {
-               group.insert('circle', 'text')
-                   .attr('r', d.data.type === 'root' ? 50 : Math.max(bbox.width, bbox.height) / 2 + 15);
-          } else {
-              group.insert('rect', 'text')
-                  .attr('x', bbox.x - 20)
-                  .attr('y', bbox.y - 15)
-                  .attr('width', bbox.width + 40)
-                  .attr('height', bbox.height + 30)
-                  .attr('rx', 10);
-          }
-      });
-      
-      const nodeUpdate = nodeEnter.merge(node);
-
-      nodeUpdate.transition().duration(duration)
-        .attr('transform', d => `translate(${d.y},${d.x})`);
-
-      nodeUpdate.select('rect, circle')
-        .style('stroke', d => d._children ? 'var(--secondary)' : null);
-
-      const nodeExit = node.exit().transition().duration(duration)
-        .attr('transform', `translate(${source.y},${source.x})`)
-        .style('opacity', 1e-6)
-        .remove();
-
-      const link = g.selectAll('path.link').data(links, d => d.id);
-
-      const linkEnter = link.enter().insert('path', "g")
-        .attr("class", "link")
-        .attr('d', d => {
-          const o = {x: source.x0, y: source.y0};
-          return `M${o.y},${o.x}C${(o.y + o.y) / 2},${o.x} ${(o.y + o.y) / 2},${o.x} ${o.y},${o.x}`;
-        });
-      
-      const linkUpdate = linkEnter.merge(link);
-
-      linkUpdate.transition().duration(duration)
-        .attr('d', d => {
-          return `M${d.y},${d.x}C${(d.y + d.parent.y) / 2},${d.x} ${(d.y + d.parent.y) / 2},${d.parent.x} ${d.parent.y},${d.parent.x}`;
+        const zoom = d3.zoom().scaleExtent([0.1, 3]).on("zoom", (event) => {
+            g.attr("transform", event.transform);
         });
 
-      link.exit().transition().duration(duration)
-        .attr('d', d => {
-          const o = {x: source.x, y: source.y};
-          return `M${o.y},${o.x}C${(o.y + o.y) / 2},${o.x} ${(o.y + o.y) / 2},${o.x} ${o.y},${o.x}`;
-        })
-        .remove();
+        svg.call(zoom);
 
-      nodes.forEach(d => {
-        d.x0 = d.x;
-        d.y0 = d.y;
-      });
-    }
+        function collapse(d) {
+            if (d.children) {
+                d._children = d.children;
+                d._children.forEach(collapse);
+                d.children = null;
+            }
+        }
 
-    function click(event, d) {
-      if (d.children) {
-        d._children = d.children;
-        d.children = null;
-      } else {
-        d.children = d._children;
-        d._children = null;
-      }
-      update(d);
-    }
-    
-    function debounce(func, wait) {
-      let timeout;
-      return function executedFunction(...args) {
-        const later = () => { clearTimeout(timeout); func(...args); };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-      };
-    }
+        function update(source) {
+            const treeLayout = d3.tree().nodeSize([150, 200]);
+            const treeData = treeLayout(root);
 
-    draw();
-    window.addEventListener('resize', debounce(draw, 250));
+            const nodes = treeData.descendants();
+            const links = treeData.descendants().slice(1);
 
-    // Particle Animation from portfolio
-    tsParticles.load("tsparticles", {
-      fpsLimit: 60,
-      interactivity: {
-        events: {
-          onHover: {
-            enable: true,
-            mode: "repulse",
-          },
-          onClick: {
-            enable: true,
-            mode: "push",
-          },
-          resize: true,
-        },
-        modes: {
-          repulse: {
-            distance: 100,
-            duration: 0.4,
-          },
-            push: {
-            quantity: 4,
-          },
-        },
-      },
-      particles: {
-        color: {
-          value: ["#20c997", "#4dabf7"],
-        },
-        links: {
-          color: "#a0aec0",
-          distance: 150,
-          enable: true,
-          opacity: 0.2,
-          width: 1,
-        },
-        collisions: {
-          enable: true,
-        },
-        move: {
-          direction: "none",
-          enable: true,
-          outModes: {
-            default: "bounce",
-          },
-          random: false,
-          speed: 1,
-          straight: false,
-        },
-        number: {
-          density: {
-            enable: true,
-            area: 800,
-          },
-          value: 50,
-        },
-        opacity: {
-          value: 0.5,
-        },
-        shape: {
-          type: "circle",
-        },
-        size: {
-          value: { min: 1, max: 5 },
-        },
-      },
-      detectRetina: true,
-    });
-  </script>
+            nodes.forEach(d => {
+                d.y = d.depth * 350;
+            });
+
+            const node = g.selectAll('g.node')
+                .data(nodes, d => d.id || (d.id = crypto.randomUUID()));
+
+            const nodeEnter = node.enter().append('g')
+                .attr('class', d => `node node-${d.data.type}`)
+                .attr('transform', `translate(${source.y0},${source.x0})`)
+                .on('click', click);
+
+            nodeEnter.each(function(d) {
+                const group = d3.select(this);
+                const isMultiLine = Array.isArray(d.data.name);
+                const text = group.append('text');
+
+                if (isMultiLine) {
+                    const lineHeight = d.data.type === 'param' ? '1.3em' : '1.2em';
+                    d.data.name.forEach((line, i) => {
+                        text.append('tspan')
+                            .attr('x', 0)
+                            .attr('dy', i === 0 ? 0 : lineHeight)
+                            .text(line);
+                    });
+                } else {
+                    text.text(d.data.name);
+                }
+
+                const bbox = text.node().getBBox();
+
+                if (d.data.type === 'root' || d.data.type === 'class') {
+                    group.insert('circle', 'text')
+                        .attr('r', d.data.type === 'root' ? 50 : Math.max(bbox.width, bbox.height) / 2 + 15);
+                } else {
+                    group.insert('rect', 'text')
+                        .attr('x', bbox.x - 20)
+                        .attr('y', bbox.y - 15)
+                        .attr('width', bbox.width + 40)
+                        .attr('height', bbox.height + 30)
+                        .attr('rx', 10);
+                }
+            });
+
+            const nodeUpdate = nodeEnter.merge(node);
+
+            nodeUpdate.transition().duration(duration)
+                .attr('transform', d => `translate(${d.y},${d.x})`);
+
+            nodeUpdate.select('rect, circle')
+                .style('stroke', d => d._children ? '#3949AB' : null);
+
+            const nodeExit = node.exit().transition().duration(duration)
+                .attr('transform', `translate(${source.y},${source.x})`)
+                .style('opacity', 1e-6)
+                .remove();
+
+            const link = g.selectAll('path.link').data(links, d => d.id);
+
+            const linkEnter = link.enter().insert('path', "g")
+                .attr("class", "link")
+                .attr('d', d => {
+                    const o = {x: source.x0, y: source.y0};
+                    return `M${o.y},${o.x}C${(o.y + o.y) / 2},${o.x} ${(o.y + o.y) / 2},${o.x} ${o.y},${o.x}`;
+                });
+
+            const linkUpdate = linkEnter.merge(link);
+
+            linkUpdate.transition().duration(duration)
+                .attr('d', d => {
+                    return `M${d.y},${d.x}C${(d.y + d.parent.y) / 2},${d.x} ${(d.y + d.parent.y) / 2},${d.parent.x} ${d.parent.y},${d.parent.x}`;
+                });
+
+            link.exit().transition().duration(duration)
+                .attr('d', d => {
+                    const o = {x: source.x, y: source.y};
+                    return `M${o.y},${o.x}C${(o.y + o.y) / 2},${o.x} ${(o.y + o.y) / 2},${o.x} ${o.y},${o.x}`;
+                })
+                .remove();
+
+            nodes.forEach(d => {
+                d.x0 = d.x;
+                d.y0 = d.y;
+            });
+        }
+
+        function click(event, d) {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d._children = null;
+            }
+            update(d);
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        draw();
+        window.addEventListener('resize', debounce(draw, 250));
+
+        tsParticles.load("tsparticles", {
+            fpsLimit: 60,
+            interactivity: {
+                events: {
+                    onHover: {
+                        enable: true,
+                        mode: "repulse",
+                    },
+                    onClick: {
+                        enable: true,
+                        mode: "push",
+                    },
+                    resize: true,
+                },
+                modes: {
+                    repulse: {
+                        distance: 100,
+                        duration: 0.4,
+                    },
+                    push: {
+                        quantity: 4,
+                    },
+                },
+            },
+            particles: {
+                color: {
+                    value: ["#20c997", "#4dabf7"],
+                },
+                links: {
+                    color: "#a0aec0",
+                    distance: 150,
+                    enable: true,
+                    opacity: 0.2,
+                    width: 1,
+                },
+                collisions: {
+                    enable: true,
+                },
+                move: {
+                    direction: "none",
+                    enable: true,
+                    outModes: {
+                        default: "bounce",
+                    },
+                    random: false,
+                    speed: 1,
+                    straight: false,
+                },
+                number: {
+                    density: {
+                        enable: true,
+                        area: 800,
+                    },
+                    value: 50,
+                },
+                opacity: {
+                    value: 0.5,
+                },
+                shape: {
+                    type: "circle",
+                },
+                size: {
+                    value: {
+                        min: 1,
+                        max: 5
+                    },
+                },
+            },
+            detectRetina: true,
+        });
+    </script>
 </body>
 </html>
