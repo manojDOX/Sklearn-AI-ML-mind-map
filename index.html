@@ -533,35 +533,85 @@
                     ]
                 },
                 {
-                    name: "Unsupervised Learning",
-                    type: "category",
+    name: "Unsupervised Learning",
+    type: "category",
+    children: [
+        {
+            name: "Clustering",
+            type: "sub-category",
+            children: [
+                {
+                    name: "What is it?",
+                    type: "class",
+                    children: [{
+                        name: "Grouping data points based on similarity without pre-existing labels.",
+                        type: "param"
+                    }]
+                },
+                {
+                    name: "K-Means",
+                    type: "class",
                     children: [
                         {
-                            name: "Clustering",
-                            type: "sub-category",
+                            name: "How it works (E-M)",
+                            type: "class",
+                            children: [
+                                { name: "1. Guess 'k' cluster centers.", type: "param" },
+                                { name: "2. E-Step: Assign points to the nearest center.", type: "param" },
+                                { name: "3. M-Step: Update centers to the mean of assigned points.", type: "param" },
+                                { name: "4. Repeat until converged.", type: "param" }
+                            ]
+                        },
+                        {
+                            name: "Implementation",
+                            type: "class",
                             children: [
                                 {
-                                    name: "KMeans",
-                                    type: "class"
-                                },
-                                {
-                                    name: "DBSCAN",
-                                    type: "class"
+                                    name: [
+                                        "from sklearn.cluster import KMeans",
+                                        "kmeans = KMeans(n_clusters=4, n_init='auto')",
+                                        "kmeans.fit(X)"
+                                    ],
+                                    type: "param"
                                 }
                             ]
                         },
                         {
-                            name: "Decomposition",
-                            type: "sub-category",
+                            name: "Limitations",
+                            type: "class",
                             children: [
-                                {
-                                    name: "PCA",
-                                    type: "class"
-                                }
+                                { name: ["• Must select 'k' beforehand", "• Limited to linear boundaries", "• Can be slow on large datasets"], type: "param" }
                             ]
                         }
                     ]
                 },
+                {
+                    name: "Choosing 'k'",
+                    type: "class",
+                    children: [
+                        {
+                            name: "Elbow Method",
+                            type: "class",
+                            children: [
+                                { name: "Finds the 'elbow' point where adding more clusters gives diminishing returns.", type: "param" },
+                                { name: "WCSS Formula: Σ(distance(p, c))²", type: "param" }
+                            ]
+                        },
+                        {
+                            name: "Silhouette Analysis",
+                            type: "class",
+                            children: [
+                                { name: "Measures how similar a point is to its own cluster compared to others.", type: "param" },
+                                { name: "Score Formula: (b - a) / max(a, b)", type: "param" },
+                                { name: "Code: from sklearn.metrics import silhouette_score", type: "param" }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+    ]
+},
                 {
                     name: "Model Selection",
                     type: "category",
