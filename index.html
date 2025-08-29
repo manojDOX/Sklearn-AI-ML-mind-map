@@ -613,45 +613,146 @@
     ]
 },
                 {
-                    name: "Model Selection",
-                    type: "category",
+    name: "Preprocessing",
+    type: "category",
+    children: [
+        {
+            name: "Understanding Data",
+            type: "sub-category",
+            children: [
+                {
+                    name: "Why it's important?",
+                    type: "class",
                     children: [
-                        {
-                            name: "Splitting",
-                            type: "sub-category",
-                            children: [
-                                {
-                                    name: "train_test_split",
-                                    type: "class"
-                                }
-                            ]
-                        },
-                        {
-                            name: "Tuning",
-                            type: "sub-category",
-                            children: [
-                                {
-                                    name: "GridSearchCV",
-                                    type: "class"
-                                }
-                            ]
-                        }
+                        { name: ["• Select appropriate models", "• Guide feature engineering", "• Ensure data quality", "• Interpret results accurately"], type: "param" }
                     ]
                 },
                 {
-                    name: "Preprocessing",
-                    type: "category",
+                    name: "Data Types",
+                    type: "class",
                     children: [
-                        {
-                            name: "StandardScaler",
-                            type: "class"
-                        },
-                        {
-                            name: "MinMaxScaler",
-                            type: "class"
-                        }
+                        { name: ["Numeric (int, float)", "Sequence (str, list)", "Mapping (dict)", "Boolean (bool)"], type: "param" }
+                    ]
+                },
+                {
+                    name: "Data Quality",
+                    type: "class",
+                    children: [
+                        { name: ["Check for:", "• Missing values", "• Errors (e.g., age=-5)", "• Inconsistencies"], type: "param" }
+                    ]
+                },
+                {
+                    name: "Data Distribution",
+                    type: "class",
+                    children: [
+                        { name: ["Visualize with histograms, box plots to find skewness, outliers, etc."], type: "param" }
                     ]
                 }
+            ]
+        },
+        {
+            name: "Handling Missing Values",
+            type: "sub-category",
+            children: [
+                {
+                    name: "Mean Imputation",
+                    type: "class",
+                    children: [
+                        { name: "When to use: Data is normally distributed and has no significant outliers.", type: "param" },
+                        { name: "Code: SimpleImputer(strategy='mean')", type: "param" }
+                    ]
+                },
+                {
+                    name: "Median Imputation",
+                    type: "class",
+                    children: [
+                        { name: "When to use: Data is skewed or contains outliers.", type: "param" },
+                        { name: "Code: SimpleImputer(strategy='median')", type: "param" }
+                    ]
+                }
+            ]
+        },
+        {
+            name: "Handling Outliers",
+            type: "sub-category",
+            children: [
+                {
+                    name: "IQR Removal",
+                    type: "class",
+                    children: [
+                        { name: "Removes points outside 1.5 * IQR from quartiles.", type: "param" },
+                        { name: "When to use: Works well for skewed data as it's not based on mean/std dev.", type: "param" }
+                    ]
+                },
+                {
+                    name: "Z-Score Removal",
+                    type: "class",
+                    children: [
+                        { name: "Removes points with a Z-score above a threshold (e.g., 3).", type: "param" },
+                        { name: "When to use: Best for data that is approximately normally distributed.", type: "param" }
+                    ]
+                }
+            ]
+        },
+        {
+            name: "Categorical Data",
+            type: "sub-category",
+            children: [
+                {
+                    name: "One-Hot Encoding",
+                    type: "class",
+                    children: [
+                        { name: "Creates new binary columns for each category.", type: "param" },
+                        { name: "When to use: For nominal data (no intrinsic order) with few unique categories.", type: "param" },
+                        { name: "Code: ce.OneHotEncoder()", type: "param" }
+                    ]
+                },
+                {
+                    name: "Ordinal Encoding",
+                    type: "class",
+                    children: [
+                        { name: "Assigns integers based on a meaningful order.", type: "param" },
+                        { name: "When to use: For ordinal data where the order matters (e.g., 'low', 'medium', 'high').", type: "param" },
+                        { name: "Code: ce.OrdinalEncoder()", type: "param" }
+                    ]
+                }
+            ]
+        },
+        {
+            name: "Feature Scaling",
+            type: "sub-category",
+            children: [
+                {
+                    name: "Min-Max Scaling",
+                    type: "class",
+                    children: [
+                        { name: "Scales data to a fixed range, usually [0, 1].", type: "param" },
+                        { name: "When to use: Good for algorithms requiring bounded inputs (e.g., Neural Networks). Sensitive to outliers.", type: "param" },
+                        { name: "Code: from sklearn.preprocessing import MinMaxScaler", type: "param" }
+                    ]
+                },
+                {
+                    name: "Standardization",
+                    type: "class",
+                    children: [
+                        { name: "Scales data to have a mean of 0 and std dev of 1.", type: "param" },
+                        { name: "When to use: Default choice for many algorithms (e.g., SVMs, Linear Models). Less affected by outliers.", type: "param" },
+                        { name: "Code: from sklearn.preprocessing import StandardScaler", type: "param" }
+                    ]
+                },
+                {
+                    name: "Log Transformation",
+                    type: "class",
+                    children: [
+                        { name: "Reduces the impact of outliers and handles skewed data.", type: "param" },
+                        { name: "When to use: To make highly right-skewed distributions less skewed.", type: "param" },
+                        { name: "Code: np.log1p(df)", type: "param" }
+                    ]
+                }
+            ]
+        }
+    ]
+}
             ]
         };
 
